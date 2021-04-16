@@ -102,10 +102,12 @@ class Entity(BaseMixin, db.Model):
     __tablename__ = 'entities'
 
     study_id = db.Column(db.Text, db.ForeignKey("studies.id")) # link to analysis
+    analysis_id = db.Column(db.Text, db.ForeignKey("analyses.id"))
     label = db.Column(db.String)
     level = db.Column(db.String)
     data = db.Column(db.JSON) # metadata
     study = relationship('Study', backref=backref('entities'))
+    analysis = relationship('Analysis', backref=backref('entities'))
 
 
 class Point(BaseMixin, db.Model):
@@ -154,3 +156,14 @@ class PointValue(BaseMixin, db.Model):
     value = db.Column(db.String)
     dtype = db.Column(db.String, default='str')
     point = relationship('Point', backref=backref('values'))
+
+
+# Annotation Database
+class Annotation(BaseMixin, db.Model):
+    __tablename__ = "annotations"
+
+    annotations = db.Column(db.Text)
+    user_id = db.Column(db.Text, db.ForeignKey('users.id'))
+    user = relationship('User', backref=backref('annotations'))
+    dataset_id = db.Column(db.Text, db.ForeignKey('datasets.id'))
+    dataset = relationship('Dataset', backref=backref('annotations'))
